@@ -1,0 +1,13 @@
+# Dependencias (se instalan con npm install)
+node_modules/
+
+# Configuración local con contraseñas
+.env
+
+# Archivos subidos desde la API (se suben solo los de ejemplo)
+uploads/*
+!uploads/ejemplo-*.pdf
+
+# Otros
+*.log
+.DS_Store
