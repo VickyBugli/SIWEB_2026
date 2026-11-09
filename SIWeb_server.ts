@@ -97,7 +97,9 @@ const materialRespuesta = {
         tamano: { type: 'integer' },
         estado: { type: 'string' },
         id_materia: { type: 'integer' },
-        id_usuario: { type: 'integer' }
+        id_usuario: { type: 'integer' },
+        valoracion_promedio: { type: ['number', 'null'] },
+        cantidad_votos: { type: 'integer' }
     }
 } as const;
 const reporteRespuesta = {
@@ -410,8 +412,14 @@ async function iniciarServidor() {
         if (q.tipo_material) { valores.push(q.tipo_material); condiciones.push(`m.tipo_material = $${valores.length}`); }
         if (q.anio_carrera) { valores.push(q.anio_carrera); condiciones.push(`ma.anio_carrera = $${valores.length}`); }
         const resultado = await db.query(
-            `SELECT m.id_material, m.nombre_archivo, m.formato_archivo, m.fecha_publicacion,
-                    m.tipo_material, m.descripcion, m.tamano, m.estado, m.id_materia, m.id_usuario
+                        `SELECT m.id_material, m.nombre_archivo, m.formato_archivo, m.fecha_publicacion,
+                    m.tipo_material, m.descripcion, m.tamano, m.estado, m.id_materia, m.id_usuario,
+                    (SELECT ROUND(AVG(v.puntuacion), 1)::float
+                       FROM valoracion v JOIN observacion o ON o.id_observacion = v.id_observacion
+                      WHERE o.id_material = m.id_material) AS valoracion_promedio,
+                    (SELECT COUNT(*)::int
+                       FROM valoracion v JOIN observacion o ON o.id_observacion = v.id_observacion
+                      WHERE o.id_material = m.id_material) AS cantidad_votos
              FROM material m JOIN materia ma ON ma.id_materia = m.id_materia
              WHERE ${condiciones.join(' AND ')} ORDER BY m.fecha_publicacion DESC`, valores
         );
