@@ -308,7 +308,22 @@ async function iniciarServidor() {
     });
 
     // HU 3: No se desarrolla un módulo de roles completo en esta versión.
-    // Para acciones sensibles se comprueba mínimamente el rol ya guardado en Usuario.
+    app.get('/api/auth/yo', {
+        schema: {
+            summary: 'Consultar sesión actual', tags: ['Usuarios'], security: [{ bearerAuth: [] }],
+            response: {
+                200: { type: 'object', properties: {
+                    id_usuario: { type: 'integer' },
+                    rol: { type: 'string' }
+                } },
+                401: errorRespuesta
+            }
+        }
+    }, async (request, reply) => {
+        const usuario = await usuarioDeSesion(request);
+        if (!usuario) return reply.code(401).send({ error: 'Iniciá sesión' });
+        return usuario;
+    });
 
     // HU 4: Publicar Material. Un archivo por publicación, máximo 20 MB.
     app.post<{ Body: {
@@ -482,6 +497,47 @@ async function iniciarServidor() {
             return reply.code(201).send(creado);
         }
     );
+
+    app.get<{ Params: { id: number } }>('/api/materiales/:id/comentarios', {
+        schema: {
+            summary: 'Listar comentarios de un material',
+            tags: ['Observaciones'],
+            params: idParam,
+            response: {
+                200: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            id_comentario: { type: 'integer' },
+                            id_usuario: { type: 'integer' },
+                            autor: { type: 'string' },
+                            contenido: { type: 'string' },
+                            fecha_creacion: { type: 'string', format: 'date-time' }
+                        }
+                    }
+                },
+                404: errorRespuesta
+            }
+        }
+    }, async (request, reply) => {
+        const material = await db.query(
+            `SELECT 1 FROM material WHERE id_material = $1 AND estado = 'publicado'`,
+            [request.params.id]
+        );
+        if (!material.rowCount) return reply.code(404).send({ error: 'Material no encontrado' });
+        const resultado = await db.query(
+            `SELECT c.id_observacion AS id_comentario, o.id_usuario,
+                    u.nombre_apellido AS autor, c.contenido, o.fecha_creacion
+             FROM comentario c
+             JOIN observacion o ON o.id_observacion = c.id_observacion
+             JOIN usuario u ON u.id_usuario = o.id_usuario
+             WHERE o.id_material = $1
+             ORDER BY o.fecha_creacion ASC, c.id_observacion ASC`,
+            [request.params.id]
+        );
+        return resultado.rows;
+    });    
 
     // HU 9: Reportar Material.
     app.post<{ Params: { id: number }; Body: { motivo_reporte: string } }>(

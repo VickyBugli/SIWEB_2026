@@ -8,8 +8,10 @@ const router = createRouter({
     { path: '/login', component: LoginView },
     { path: '/registro', component: () => import('@/autenticacion/views/RegistroView.vue') },
     { path: '/materiales', component: () => import('@/materiales/views/BuscarView.vue') },
+    { path: '/materiales/:id', component: () => import('@/materiales/views/DetalleMaterialView.vue')},
     { path: '/publicar', component: () => import('@/materiales/views/PublicarView.vue') },
     { path: '/materias/:id', component: () => import('@/materias/views/MateriaView.vue') },
+    { path: '/reportes', component: () => import('@/reportes/views/ReportesView.vue') }
   ],
 })
 

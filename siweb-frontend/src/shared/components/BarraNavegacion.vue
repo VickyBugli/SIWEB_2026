@@ -47,7 +47,7 @@ async function salir() {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #1a1a1a;
+  color: #070707;
   font-weight: 700;
   text-decoration: none;
 }
@@ -63,19 +63,19 @@ async function salir() {
 }
 
 .enlaces a {
-  color: #4d4d4d;
+  color: #76767F;
   font-weight: 600;
   text-decoration: none;
 }
 
 .enlaces a.router-link-active {
-  color: #0047ff;
+  color: #0040FF;
 }
 
 .salir {
   padding: 8px 16px;
   font-size: 14px;
-  color: #4d4d4d;
+  color: #76767F;
   background: none;
   border: 1px solid #b3b3b3;
   border-radius: 8px;
