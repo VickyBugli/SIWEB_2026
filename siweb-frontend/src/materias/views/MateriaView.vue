@@ -127,7 +127,12 @@ function fecha(iso: string) {
         <p v-if="materiales.length === 0" class="nota">Todavía no hay materiales publicados.</p>
 
         <div class="materiales">
-          <article v-for="m in materiales" :key="m.id_material" class="tarjeta">
+          <RouterLink
+            v-for="m in materiales"
+            :key="m.id_material"
+            :to="`/materiales/${m.id_material}`"
+            class="tarjeta"
+          >
             <div class="miniatura">{{ formato(m.nombre_archivo) }}</div>
             <span class="etiqueta chica">{{ textoTipo(m.tipo_material) }}</span>
             <h3>{{ sinExtension(m.nombre_archivo) }}</h3>
@@ -144,7 +149,7 @@ function fecha(iso: string) {
               <span v-else class="gris">Sin votos</span>
               <span class="gris">· {{ fecha(m.fecha_publicacion) }}</span>
             </div>
-          </article>
+          </RouterLink>
         </div>
       </section>
     </template>
@@ -295,17 +300,6 @@ h3 {
   gap: 20px;
 }
 
-.tarjeta {
-  width: 240px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px;
-}
-
 .miniatura {
   height: 88px;
   display: flex;
@@ -340,4 +334,24 @@ h3 {
   background: #d50000;
   color: #ffffff;
 }
+
+.tarjeta {
+  width: 240px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.tarjeta:hover {
+  border-color: #0047ff;
+  box-shadow: 0 4px 12px rgba(0, 71, 255, 0.12);
+}
+
 </style>

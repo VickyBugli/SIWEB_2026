@@ -243,7 +243,9 @@ async function enviarReporteComentario() {
       <nav class="migas" aria-label="Ruta de navegación">
         <RouterLink to="/materiales">Materiales</RouterLink>
         <span>/</span>
-        <span v-if="material">{{ nombreMateria(material.id_materia) }}</span>
+                <RouterLink v-if="material" :to="`/materias/${material.id_materia}`">
+          {{ nombreMateria(material.id_materia) }}
+        </RouterLink>
         <span v-if="material">/</span>
         <span>{{ material?.nombre_archivo ?? 'Detalle del material' }}</span>
       </nav>
@@ -259,7 +261,9 @@ async function enviarReporteComentario() {
         <div class="columna-principal">
           <div class="etiquetas">
             <span class="etiqueta">{{ nombreTipo(material.tipo_material) }}</span>
-            <span class="etiqueta">{{ nombreMateria(material.id_materia) }}</span>
+                        <RouterLink :to="`/materias/${material.id_materia}`" class="etiqueta etiqueta-enlace">
+              {{ nombreMateria(material.id_materia) }}
+            </RouterLink>
           </div>
 
           <h1>{{ material.nombre_archivo }}</h1>
@@ -350,7 +354,12 @@ async function enviarReporteComentario() {
               <dt>Tipo</dt><dd>{{ nombreTipo(material.tipo_material) }}</dd>
               <dt>Formato</dt><dd>{{ tipoArchivo(material.formato_archivo) }}</dd>
               <dt>Tamaño</dt><dd>{{ tamanoArchivo(material.tamano) }}</dd>
-              <dt>Materia</dt><dd>{{ nombreMateria(material.id_materia) }}</dd>
+                            <dt>Materia</dt>
+              <dd>
+                <RouterLink :to="`/materias/${material.id_materia}`">
+                  {{ nombreMateria(material.id_materia) }}
+                </RouterLink>
+              </dd>
             </dl>
           </section>
 
@@ -377,3 +386,20 @@ async function enviarReporteComentario() {
     </div>
   </main>
 </template>
+
+<style scoped>
+.etiqueta-enlace {
+  text-decoration: none;
+  color: inherit;
+}
+
+.etiqueta-enlace:hover {
+  color: #0047ff;
+}
+
+.pantalla-detalle {
+  background: #e5e9f0;
+}
+</style>
+
+

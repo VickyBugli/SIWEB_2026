@@ -242,3 +242,9 @@ async function ejecutarAccion(reporte: Reporte, accion: AccionReporte) {
     </div>
   </main>
 </template>
+
+<style scoped>
+.pantalla-reportes {
+  background: #e5e9f0;
+}
+</style>

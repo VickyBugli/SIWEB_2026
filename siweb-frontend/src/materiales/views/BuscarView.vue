@@ -207,7 +207,7 @@ function formatearFecha(fecha: string): string {
 .pantalla {
   min-height: 100vh;
   padding: 36px 24px 60px;
-  background: #FFFFFF;
+  background: #e5e9f0;
 }
 
 .contenedor {
